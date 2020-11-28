@@ -19,9 +19,10 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
         $this->middleware('permission:user.create', ['only' => ['create','store']]);
-        $this->middleware('permission:user.show', ['only' => ['index','show', 'ajaxIndex', 'ajaxSearch']]);
+        $this->middleware('permission:user.show', ['only' => ['show', 'ajaxSearch']]);
+        $this->middleware('permission:user.index', ['only' => ['index', 'ajaxIndex']]);
         $this->middleware('permission:user.edit', ['only' => ['edit','update']]);
         $this->middleware('permission:user.delete', ['only' => ['destroy', 'destroyMany']]);
     }
@@ -174,6 +175,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        // check for cascade delete
+
         Storage::delete($user->profile_image_path);
         $user->delete();
 
@@ -188,6 +191,8 @@ class UserController extends Controller
      */
     public function destroyMany($ids)
     {
+
+        // check for cascade delete
         $userIds = explode(",", $ids);
 
         foreach ($userIds as $userId) {
@@ -211,6 +216,9 @@ class UserController extends Controller
         if ($request->ajax()) {
             return datatables()->of(User::all())
                 ->removeColumn('email_verified_at')
+                ->editColumn('active', function ($user) {
+                    return $user->active ? '1' : '0';
+                })
                 ->addColumn('role', function ($user) {
                     if(!empty($user->getRoleNames())) {
                         return $user->getRoleNames()[0];
@@ -228,7 +236,8 @@ class UserController extends Controller
         if($request->has('q')) {
             $search = $request->input('q');
 
-            $users = User::where('name','LIKE',"%$search%")
+            $users = User::role(['community-admin', 'student'])
+                ->where('name','LIKE',"%$search%")
                 ->orderBy('name', 'desc')
                 ->paginate(5);
 

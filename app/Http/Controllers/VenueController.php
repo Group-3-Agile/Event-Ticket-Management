@@ -15,9 +15,10 @@ class VenueController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
         $this->middleware('permission:venue.create', ['only' => ['create','store']]);
-        $this->middleware('permission:venue.show', ['only' => ['index','show', 'ajaxIndex', 'ajaxSearch']]);
+        $this->middleware('permission:venue.show', ['only' => ['index', 'ajaxSearch']]);
+        $this->middleware('permission:venue.index', ['only' => ['index', 'ajaxIndex']]);
         $this->middleware('permission:venue.edit', ['only' => ['edit','update']]);
         $this->middleware('permission:venue.delete', ['only' => ['destroy', 'destroyMany']]);
     }
@@ -188,6 +189,12 @@ class VenueController extends Controller
     {
         if ($request->ajax()) {
             return datatables()->of(Venue::all())
+                ->editColumn('active', function ($venue) {
+                    return $venue->active ? '1' : '0';
+                })
+                ->editColumn('air_conditioned', function ($venue) {
+                    return $venue->air_conditioned ? '1' : '0';
+                })
                 ->toJson();
         }
     }
