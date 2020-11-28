@@ -20,9 +20,17 @@ use Illuminate\Support\Str;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
+        'email' => preg_replace('/@example\..*/', '@student.newinti.edu.my', $faker->unique()->email),
+        'student_id' => $faker->bothify('P????????'),
+        'ic_number' => $faker->numerify('######-##-####'),
+        'phone_number' => $faker->numerify('###-#######'),
+        'biography' => $faker->text($maxNbChars = 200),
+        'profile_image_path' => null,
+        'password' => Hash::make('adminadminadminadmin'),
+        'active' => $faker->boolean,
         'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
+        'created_at' => $faker->dateTimeBetween('-1 month', '+1 month'),
     ];
 });
+
