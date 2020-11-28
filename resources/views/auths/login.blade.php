@@ -1,76 +1,77 @@
-@extends('layouts.app')
+@extends('layouts.auth')
+
+@section('title', 'Login')
+
+@section('pagevendorsstyles')
+    <link href="{{ asset('assets/css/pages/login/login-3.css') }}" rel="stylesheet" type="text/css" />
+@endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" style="font-size: 28px; font-family: Optima, sans-serif; background-color:#cceeff;color:#e60000;"><b><i>{{ __('Login') }}</i></b></div>
-
-                <div class="card-body" style="background-color:#f5f5f0;">
-                    <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-                        @csrf
-<br>
-<br>
-                        <div class="form-group row">
-                             <label for="email" class="col-sm-4 col-form-label text-md-right" style="font-size: 13px; font-family: DejaVu Sans Mono, monospace;">{{ __('Email :') }}</label>
-                            
-                            <div class="col-md-6">
-                                <input id="email" style="font-size: 13px;" placeholder="Email-Address" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+    <div class="kt-grid kt-grid--ver kt-grid--root">
+        <div class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v3 kt-login--signin" id="kt_login">
+            <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" style="background-image: url({{ asset('assets/media/bg/bg-3.jpg') }});">
+                <div class="kt-grid__item kt-grid__item--fluid kt-login__wrapper">
+                    <div class="kt-login__container">
+                        <div class="kt-login__logo">
+                            <a href="#">
+                                <img src="{{ asset('assets/media/logos/inti-logo.png') }}" width="300px" height="50px">
+                            </a>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right" style="font-size: 13px; font-family: DejaVu Sans Mono, monospace">{{ __('Password :') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" style="font-size: 13px;" placeholder = "Password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+                        <div class="kt-login__signin">
+                            <div class="kt-login__head">
+                                <h3 class="kt-login__title">Login to {{ config('app.name') }}</h3>
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" style="font-size:10px" for="remember" >
-                                        &ensp;&ensp;&ensp;{{ __('    Remember Me') }}
-                                    </label>
+                            <form id="login-form" class="kt-form" method="POST" action="{{ route('login') }}">
+                                @csrf
+                                <div class="input-group">
+                                    <input class="form-control @error('email') is-invalid @enderror" type="text" placeholder="{{ __('E-Mail Address') }}" name="email" value="{{ old('email') }}" autocomplete="off" required autofocus>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                            </div>
+                                <div class="input-group">
+                                    <input class="form-control @error('password') is-invalid @enderror" type="password" placeholder="{{ __('Password') }}" name="password" required>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="row kt-login__extra">
+                                    <div class="col">
+                                        <label class="kt-checkbox">
+                                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> {{ __('Remember Me') }}
+                                            <span></span>
+                                        </label>
+                                    </div>
+                                    @if (Route::has('password.request'))
+                                        <div class="col kt-align-right">
+                                            <a href="{{ route('password.request') }}" id="kt_login_forgot" class="kt-login__link">{{ __('Forgot Your Password?') }}</a>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="kt-login__actions">
+                                    <button type="submit" id="kt_login_signin_submit" class="btn btn-brand btn-elevate kt-login__btn-primary">{{ __('Login') }}</button>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary" style="font-size: 13px;">
-                                    {{ __('Login') }}
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}" style="font-size: 12px; color:red;"><b>
-                                    {{ __('Forgot Your Password?') }}
-                                </b></a>
+                        @if (Route::has('register'))
+                            <div class="kt-login__account">
+                                    <span class="kt-login__account-msg">
+                                        Don't have an account yet ?
+                                    </span>
+                                &nbsp;&nbsp;
+                                <a href="{{ route('register') }}" id="kt_login_signup" class="kt-login__account-link">{{ __('Register') }}</a>
                             </div>
-							<br>
-							<br>
-							<br>
-							<br>
-                        </div>
-                    </form>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
+
+@section('pagevendorsscripts')
+@endsection
+
+@section('pagescripts')
+    <script src="{{ asset('assets/js/pages/custom/login/login-general.js') }}" type="text/javascript"></script>
 @endsection

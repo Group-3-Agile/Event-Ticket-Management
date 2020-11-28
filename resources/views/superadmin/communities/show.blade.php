@@ -66,7 +66,7 @@
                                                 <div class="progress-bar kt-bg-success" role="progressbar" style="width: {{ $community->membership_rate }}%;" aria-valuenow="{{ $community->membership_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                             <div class="kt-widget__stats">
-                                                {{ $community->membership_rate }}%
+                                                {{ number_format($community->membership_rate, 2, '.', ',') }}%
                                             </div>
                                         </div>
                                     </div>

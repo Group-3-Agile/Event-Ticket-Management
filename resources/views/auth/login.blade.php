@@ -5,37 +5,37 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-               <div class="card-header" style="font-size: 28px; font-family: Optima, sans-serif; background-color:#cceeff;color:#e60000;"><b><i>{{ __('Login') }}</i></b></div>
+                <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+                    <form method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <div class="form-group row">
-                             <label for="email" class="col-sm-4 col-form-label text-md-right" style="font-size: 13px; font-family: DejaVu Sans Mono, monospace;">{{ __('Email :') }}</label>
-                            
-                            <div class="col-md-6">
-                                <input id="email"  style="font-size: 13px;" placeholder="Email-Address" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
-                                @if ($errors->has('email'))
+                            <div class="col-md-6">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $message }}</strong>
                                     </span>
-                                @endif
+                                @enderror
                             </div>
                         </div>
 
                         <div class="form-group row">
-                           <label for="password" class="col-md-4 col-form-label text-md-right" style="font-size: 13px; font-family: DejaVu Sans Mono, monospace">{{ __('Password :') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" style="font-size: 13px;" placeholder = "Password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
-                                @if ($errors->has('password'))
+                                @error('password')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>{{ $message }}</strong>
                                     </span>
-                                @endif
+                                @enderror
                             </div>
                         </div>
 
@@ -44,8 +44,8 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-                                    <label class="form-check-label" style="font-size:10px" for="remember">
-                                        &ensp;&ensp;&ensp;{{ __('    Remember Me') }}
+                                    <label class="form-check-label" for="remember">
+                                        {{ __('Remember Me') }}
                                     </label>
                                 </div>
                             </div>
@@ -53,13 +53,15 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary" style="font-size: 13px;">
+                                <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}" style="font-size: 12px; color:red;">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
+                                @if (Route::has('password.request'))
+                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                        {{ __('Forgot Your Password?') }}
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </form>
