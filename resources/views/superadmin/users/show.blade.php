@@ -48,8 +48,12 @@
                                             @endif
                                         </a>
                                         <div class="kt-widget__action">
-                                            <button type="button" class="btn btn-label-danger btn-sm btn-upper" data-toggle="modal" data-target="#modal-delete" data-id="{{ $user->id }}"><i class="la la-trash"></i>Delete</button>&nbsp;
-                                            <a href="{{ route('users.edit', $user) }}" class="btn btn-brand btn-sm btn-upper"><i class="la la-edit"></i>Edit</a>
+                                            @can('user.delete')
+                                                <button type="button" class="btn btn-label-danger btn-sm btn-upper" data-toggle="modal" data-target="#modal-delete" data-id="{{ $user->id }}"><i class="la la-trash"></i>Delete</button>&nbsp;
+                                            @endcan
+                                            @can('user.edit')
+                                                <a href="{{ route('users.edit', $user) }}" class="btn btn-brand btn-sm btn-upper"><i class="la la-edit"></i>Edit</a>
+                                            @endcan
                                         </div>
                                     </div>
                                     <div class="kt-widget__subhead">
@@ -77,7 +81,7 @@
                                                 <div class="progress-bar kt-bg-success" role="progressbar" style="width: {{ $user->active_rate }}%;" aria-valuenow="{{ $user->active_rate }}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                             <div class="kt-widget__stats">
-                                                {{ $user->active_rate }}%
+                                                {{ number_format($user->active_rate, 2, '.', ',')}}%
                                             </div>
                                         </div>
                                     </div>
